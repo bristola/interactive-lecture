@@ -5,13 +5,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from Models.User import Base, User
-from Models.Lecture import Lecture
+from Models.Models import Base, User, Lecture
 
 engine = create_engine('sqlite:///interlect/Database/database.sqlite3')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-user = session.query(User).filter(User.username =="Teacher").first()
-print(user.lectures)
+lectures = session.query(Lecture).filter(Lecture.owner == 1).all()
+print(lectures)

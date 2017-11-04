@@ -3,8 +3,7 @@
 from flask import render_template, Flask, Response, redirect, url_for, request, abort
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user
 from flask_login import current_user
-from Models.User import User
-from Models.AppBase import Base
+from Models.Models import User, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
