@@ -1,14 +1,9 @@
 # python -m flask run
 
-from flask import render_template, Flask, Response, redirect, url_for, request, session, abort
+from flask import render_template, Flask, Response, redirect, url_for, request, abort
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user
 from flask_login import current_user
-from Models.User import User, Base
-import os
-import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from Models.Models import User, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
