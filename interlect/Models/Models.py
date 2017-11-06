@@ -18,9 +18,10 @@ association_table = Table(
 
 class User(Base, UserMixin):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(30), nullable=False)
     password = Column(String(30), nullable=False)
+    owned_lectures = relationship("Lecture",back_populates="ownerObj")
     lectures = relationship(
         "Lecture",
         secondary=association_table,
@@ -32,9 +33,10 @@ class User(Base, UserMixin):
 
 class Lecture(Base):
     __tablename__ = 'lecture'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(30), nullable=False)
     owner = Column(Integer, ForeignKey(User.id), primary_key=True)
+    ownerObj = relationship("User",back_populates="owned_lectures")
     school = Column(String(30), nullable=False)
     users = relationship(
         "User",

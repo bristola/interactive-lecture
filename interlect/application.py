@@ -3,7 +3,7 @@
 from flask import render_template, Flask, Response, redirect, url_for, request, abort
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user
 from flask_login import current_user
-from Models.Models import User, Base
+from Models.Models import User, Lecture, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -25,7 +25,7 @@ app.config.update(
 # flask-login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login"
+login_manager.login_view = "login_get"
 
 @app.route('/')
 @app.route('/home')
@@ -83,6 +83,34 @@ def userPage(id):
         return redirect(url_for('home'))
     user = session.query(User).filter(User.id == id).first()
     return render_template('user_page.html',username=user.username)
+
+@app.route('/create_lecture',methods=["POST"])
+@login_required
+def create_lecture_post():
+    lecture = Lecture(
+        school=request.form['school'],
+        name=request.form['lecture_name'],
+        ownerObj=load_user(current_user.get_id()),
+        users=[load_user(current_user.get_id())]
+    )
+    session.add(lecture)
+    session.flush()
+    return redirect(url_for('lecturePage', id=lecture.id))
+
+@app.route('/create_lecture',methods=["GET"])
+@login_required
+def create_lecture_get():
+    return render_template('create_lecture.html')
+
+@app.route('/lecture/<int:id>')
+@login_required
+def lecturePage(id):
+    lecture = session.query(Lecture).filter(Lecture.id == id).first()
+    if load_user(current_user.get_id()) not in lecture.users:
+        return redirect(url_for('userPage', id=current_user.get_id()))
+    return render_template('lecture_page.html',name=lecture.name,school=lecture.school)
+
+#TODO: Add ability to add students(users) to a lecture
 
 @app.route("/logout")
 @login_required
