@@ -1,4 +1,13 @@
 <!doctype html>
 <h1>Hello {{ username }}!!!</h1>
 <a href="/logout">Logout</a>
-<a href="/create_lecture">Create Lecture</a>
+<br><hr>
+<h2>Lectures</h2>
+<ul>
+{% for lecture in lectures %}
+    <li><a href="/lecture/{{ lecture.id }}">{{ lecture.name }}</a></li>
+{% else %}
+    No Lectures available
+{% endfor %}
+</ul>
+<a href="/create_lecture">Create New Lecture</a>

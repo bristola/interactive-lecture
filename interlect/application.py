@@ -81,8 +81,8 @@ def signup_get():
 def userPage(id):
     if int(current_user.get_id()) != id:
         return redirect(url_for('home'))
-    user = session.query(User).filter(User.id == id).first()
-    return render_template('user_page.html',username=user.username)
+    user = load_user(current_user.get_id())
+    return render_template('user_page.html',username=user.username,lectures=user.lectures)
 
 @app.route('/create_lecture',methods=["POST"])
 @login_required
@@ -106,9 +106,24 @@ def create_lecture_get():
 @login_required
 def lecturePage(id):
     lecture = session.query(Lecture).filter(Lecture.id == id).first()
-    if load_user(current_user.get_id()) not in lecture.users:
+    user = load_user(current_user.get_id())
+    if user not in lecture.users:
         return redirect(url_for('userPage', id=current_user.get_id()))
-    return render_template('lecture_page.html',name=lecture.name,school=lecture.school)
+    return render_template('lecture_page.html',lecture=lecture,owner=(user == lecture.ownerObj))
+
+@app.route('/lecture/<int:id>/add_users',methods=["GET"])
+@login_required
+def add_users_get(id):
+    lecture = session.query(Lecture).filter(Lecture.id == id).first()
+    user = load_user(current_user.get_id())
+    if (user != lecture.ownerObj):
+        redirect(url_for('lecturePage', id=lecture.id))
+    return render_template('add_users.html')
+
+@app.route('/lecture/<int:id>/add_users',methods=["POST"])
+@login_required
+def add_users_post(id):
+    return
 
 #TODO: Add ability to add students(users) to a lecture
 
