@@ -3,7 +3,7 @@
 from flask import render_template, Flask, Response, redirect, url_for, request, abort
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user
 from flask_login import current_user
-from Models.Models import User, Base
+from Models.Models import User, Lecture, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -25,7 +25,7 @@ app.config.update(
 # flask-login
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login"
+login_manager.login_view = "login_get"
 
 @app.route('/')
 @app.route('/home')
@@ -81,8 +81,59 @@ def signup_get():
 def userPage(id):
     if int(current_user.get_id()) != id:
         return redirect(url_for('home'))
-    user = session.query(User).filter(User.id == id).first()
-    return render_template('user_page.html',username=user.username)
+    user = load_user(current_user.get_id())
+    return render_template('user_page.html',username=user.username,lectures=user.lectures)
+
+@app.route('/create_lecture',methods=["POST"])
+@login_required
+def create_lecture_post():
+    lecture = Lecture(
+        school=request.form['school'],
+        name=request.form['lecture_name'],
+        ownerObj=load_user(current_user.get_id()),
+        users=[load_user(current_user.get_id())]
+    )
+    session.add(lecture)
+    session.commit()
+    return redirect(url_for('lecturePage', id=lecture.id))
+
+@app.route('/create_lecture',methods=["GET"])
+@login_required
+def create_lecture_get():
+    return render_template('create_lecture.html')
+
+@app.route('/lecture/<int:id>')
+@login_required
+def lecturePage(id):
+    lecture = session.query(Lecture).filter(Lecture.id == id).first()
+    user = load_user(current_user.get_id())
+    if user not in lecture.users:
+        return redirect(url_for('userPage', id=current_user.get_id()))
+    return render_template('lecture_page.html',lecture=lecture,owner=(user == lecture.ownerObj))
+
+@app.route('/lecture/<int:id>/add_users',methods=["GET"])
+@login_required
+def add_users_get(id):
+    lecture = session.query(Lecture).filter(Lecture.id == id).first()
+    user = load_user(current_user.get_id())
+    if (user != lecture.ownerObj):
+        return redirect(url_for('lecturePage', id=lecture.id))
+    return render_template('add_users.html',lecture_id=lecture.id)
+
+@app.route('/lecture/<int:id>/add_users',methods=["POST"])
+@login_required
+def add_users_post(id):
+    results = request.json
+    users = list()
+    for result in results:
+        user = session.query(User).filter(User.username == result).first()
+        if (user != None):
+            users.append(user)
+    lecture = session.query(Lecture).filter(Lecture.id == id).first()
+    lecture.users = lecture.users + users
+    session.add(lecture)
+    session.commit()
+    return ('', 204)
 
 @app.route("/logout")
 @login_required

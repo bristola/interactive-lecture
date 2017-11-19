@@ -1,0 +1,40 @@
+<div>
+    <h3>Enter Usernames of people you want to add to the class:</h3>
+    <input id="userInput" type="text"></input>
+    <button id="addUserButton">Add User</button>
+    <ul id="container"></ul>
+    <button id="submitUsersButton">Submit Users</button>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script type ="text/javascript">
+
+var users = [];
+
+function addUser() {
+    newUser = document.getElementById("userInput").value;
+    users.push(newUser);
+    content = document.getElementById("container").innerHTML;
+    document.getElementById("container").innerHTML = content + "<li>"+newUser+"</li><br>";
+}
+
+function submitUsers() {
+    if (users.length == 0) {
+        alert("No users have been entered!")
+    }
+    $.ajax({
+        type: "POST",
+        url: "/lecture/{{ lecture_id }}/add_users",
+        data: JSON.stringify(users, null, "\t"),
+        contentType: "application/json;charset=UTF-8",
+        success: function(result) {
+            window.location.href = "/lecture/{{ lecture_id }}";
+        }
+    });
+}
+
+document.getElementById("addUserButton").addEventListener("click", addUser);
+document.getElementById("submitUsersButton").addEventListener("click", submitUsers);
+
+</script>

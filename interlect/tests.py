@@ -12,5 +12,23 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-lectures = session.query(Lecture).filter(Lecture.owner == 1).all()
-print(lectures)
+# lecture = Lecture(name="CMPSC1000",owner=2,school="Allegheny")
+# session.add(lecture)
+# session.commit()
+
+# lecture = session.query(Lecture).filter(Lecture.name == "CMPSC1000").first()
+# users = session.query(User).filter(User.username != "Teacher").all()
+# print(type(users))
+# lecture.users = users
+# session.commit()
+
+lecture = session.query(Lecture).filter(Lecture.id == 1).first()
+print(lecture.users)
+print(lecture.owner)
+print(lecture.ownerObj)
+
+# lecture = session.query(Lecture).filter(Lecture.name == "lecture1").first()
+# user = session.query(User).filter(User.username == "Austin").first()
+# print(lecture)
+# lecture.ownerObj = user
+# session.commit()
