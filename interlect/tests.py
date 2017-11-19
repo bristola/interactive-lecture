@@ -22,7 +22,7 @@ session = DBSession()
 # lecture.users = users
 # session.commit()
 
-lecture = session.query(Lecture).filter(Lecture.name == "lecture1").first()
+lecture = session.query(Lecture).filter(Lecture.id == 1).first()
 print(lecture.users)
 print(lecture.owner)
 print(lecture.ownerObj)

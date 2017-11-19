@@ -94,7 +94,7 @@ def create_lecture_post():
         users=[load_user(current_user.get_id())]
     )
     session.add(lecture)
-    session.flush()
+    session.commit()
     return redirect(url_for('lecturePage', id=lecture.id))
 
 @app.route('/create_lecture',methods=["GET"])
@@ -117,15 +117,23 @@ def add_users_get(id):
     lecture = session.query(Lecture).filter(Lecture.id == id).first()
     user = load_user(current_user.get_id())
     if (user != lecture.ownerObj):
-        redirect(url_for('lecturePage', id=lecture.id))
-    return render_template('add_users.html')
+        return redirect(url_for('lecturePage', id=lecture.id))
+    return render_template('add_users.html',lecture_id=lecture.id)
 
 @app.route('/lecture/<int:id>/add_users',methods=["POST"])
 @login_required
 def add_users_post(id):
-    return
-
-#TODO: Add ability to add students(users) to a lecture
+    results = request.json
+    users = list()
+    for result in results:
+        user = session.query(User).filter(User.username == result).first()
+        if (user != None):
+            users.append(user)
+    lecture = session.query(Lecture).filter(Lecture.id == id).first()
+    lecture.users = lecture.users + users
+    session.add(lecture)
+    session.commit()
+    return ('', 204)
 
 @app.route("/logout")
 @login_required
