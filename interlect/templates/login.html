@@ -1,6 +1,58 @@
 <!doctype html>
-<form action="" method="post">
-    <p><label for="username">username: </label><input type=text name=username required>
-    <p><label for="password">password: </label><input type=password name=password required>
-    <p><input type=submit value=Login>
-</form>
+<html>
+    <head>
+      <title>Bootstrap Card</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+    </head>
+    <style>
+    html {
+        background-image: url("/static/notebook.jpg");
+        background-size:cover;
+    }
+    body {
+        background: transparent !important;
+    }
+    h2 {
+        color: #5b5e63;
+        font-size: 3vw;
+    }
+    .card {
+        margin-top: 10%;
+        margin-bottom: 10%;
+        text-align: center;
+        width: 33%;
+    }
+
+    </style>
+    <div class="card mx-auto">
+      <div class="card-block">
+          <div class="card-header"><h2>Login</h2></div>
+          <br>
+          <form action="" method="post" class="form-horizontal">
+              <div class="form-group">
+                  <div class="col-xs-6 col-xs-offset-3">
+                    <input style="width: 90%;margin-left:5%; margin-right:5%" type="text" class="form-control" placeholder="username" name=username required>
+                  </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <div class="col-xs-6 col-xs-offset-3">
+                        <input style="width: 90%;margin-left:5%; margin-right:5%" type="password" class="form-control" placeholder="password" name=password required>
+                    </div>
+                  </div>
+                  <br>
+                <div class="form-group">
+                  <div class="col-xs-6 col-xs-offset-3">
+                    <input type="submit" class="btn btn-info" style="width:40%" value="Login">
+                  </div>
+                  <br>
+                </div>
+          </form>
+      </div>
+    </div>
+</html>
