@@ -1,13 +1,84 @@
 <!doctype html>
-<h1>Hello {{ username }}!!!</h1>
-<a href="/logout">Logout</a>
-<br><hr>
-<h2>Lectures</h2>
-<ul>
-{% for lecture in lectures %}
-    <li><a href="/lecture/{{ lecture.id }}">{{ lecture.name }}</a></li>
-{% else %}
-    No Lectures available
-{% endfor %}
-</ul>
-<a href="/create_lecture">Create New Lecture</a>
+<html>
+    <head>
+      <title>Bootstrap Card</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+    </head>
+    <style>
+    #tabs {
+        margin-left: .2%;
+        margin-top: .5%;
+        background: transparent !important;
+    }
+    h2 {
+        color: #5b5e63;
+        font-size: 3vw;
+    }
+
+    span {
+        font-size: 1.25vw;
+        color: #7c7c7c;
+    }
+    .card {
+        margin-top:5%;
+        margin-right:2.5%;
+        margin-left:2.5%;
+        width:95%;
+    }
+    h1 {
+        color: #474747;
+    }
+    a {
+        color:black;
+    }
+    body{
+       padding-top:0px;
+       margin-top: 0px;
+    }
+    a:hover {
+        text-decoration: none;
+    }
+    </style>
+    <div style="background-color:#ededed;">
+        <div style="margin-left:1%;">
+            <h1>Interactive Lecture
+                <span>Welcome {{ username }}</span>
+            </h1>
+        </div>
+        <hr>
+        <ul id="tabs" class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active">Lectures</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="/create_lecture">Create Lecture</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            {% for lecture in lectures %}
+            <div class="col-sm-6">
+                <a href="/lecture/{{ lecture.id }}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">{{lecture.name}}</h4>
+                            <h6 class="card-subtitle mb-2 text-muted">{{lecture.school}}</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <h1>You have no lectures!</h1>
+            {% endfor %}
+        </div>
+   </div>
+</html>

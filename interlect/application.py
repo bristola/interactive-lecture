@@ -100,7 +100,8 @@ def create_lecture_post():
 @app.route('/create_lecture',methods=["GET"])
 @login_required
 def create_lecture_get():
-    return render_template('create_lecture.html')
+    user = load_user(current_user.get_id())
+    return render_template('create_lecture.html', id=user.id, username=user.username)
 
 @app.route('/lecture/<int:id>')
 @login_required
